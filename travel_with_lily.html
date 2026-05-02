@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Travel with Lily — Personalizovano planiranje putovanja</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #FDF6EC;
+    --sand: #E8D5B7;
+    --terracotta: #C85A2E;
+    --terra-light: #E8825A;
+    --navy: #1A2A4A;
+    --teal: #2E7D8A;
+    --teal-light: #4AAABB;
+    --gold: #D4A017;
+    --white: #FFFFFF;
+    --text-dark: #1A1A1A;
+    --text-muted: #6B5A4E;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'Nunito', 'Segoe UI', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--cream);
+    color: var(--text-dark);
+    overflow-x: hidden;
+    line-height: 1.7;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 3rem;
+    background: rgba(253, 246, 236, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--sand);
+  }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    color: var(--navy);
+    letter-spacing: 0.02em;
+  }
+
+  .nav-logo span { color: var(--terracotta); font-style: italic; }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--navy);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--terracotta); }
+
+  .nav-cta {
+    background: var(--terracotta) !important;
+    color: var(--white) !important;
+    padding: 0.5rem 1.5rem !important;
+    border-radius: 50px;
+    transition: background 0.2s !important;
+  }
+
+  .nav-cta:hover { background: var(--terra-light) !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding-top: 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 55%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%);
+    clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
+    z-index: 0;
+  }
+
+  .hero-text {
+    position: relative;
+    z-index: 1;
+    padding: 4rem 3rem 4rem 4rem;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.4rem 1.2rem;
+    border-radius: 50px;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: 3.8rem;
+    line-height: 1.15;
+    color: var(--navy);
+    margin-bottom: 1.2rem;
+  }
+
+  .hero h1 em { color: var(--terracotta); font-style: italic; }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 420px;
+    margin-bottom: 2.5rem;
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  .hero-buttons { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+  .btn-primary {
+    display: inline-block;
+    background: var(--terracotta);
+    color: var(--white);
+    padding: 0.9rem 2.2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.03em;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(200, 90, 46, 0.3);
+  }
+
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(200, 90, 46, 0.4); }
+
+  .btn-outline {
+    display: inline-block;
+    border: 2px solid var(--navy);
+    color: var(--navy);
+    padding: 0.85rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+  }
+
+  .btn-outline:hover { background: var(--navy); color: var(--white); }
+
+  .hero-image {
+    position: relative;
+    z-index: 1;
+    padding: 3rem 3rem 3rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .photo-frame {
+    width: 320px;
+    height: 420px;
+    border-radius: 200px 200px 120px 120px;
+    background: linear-gradient(160deg, #C9A87C 0%, #8B6F47 100%);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    border: 5px solid rgba(255,255,255,0.2);
+  }
+
+  .photo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.9);
+    font-family: var(--font-display);
+  }
+
+  .photo-placeholder .initials {
+    font-size: 5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: rgba(255,255,255,0.9);
+    text-shadow: 0 2px 20px rgba(0,0,0,0.2);
+  }
+
+  .photo-placeholder .name-tag {
+    font-size: 1.1rem;
+    font-style: italic;
+    opacity: 0.85;
+    margin-top: 0.5rem;
+  }
+
+  .floating-card {
+    position: absolute;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 0.8rem 1.2rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--navy);
+    white-space: nowrap;
+    font-family: var(--font-body);
+  }
+
+  .card-left { left: 10px; top: 35%; color: var(--teal); }
+  .card-right { right: 10px; bottom: 20%; color: var(--terracotta); }
+  .card-icon { font-size: 1.1rem; margin-right: 0.4rem; }
+
+  /* SECTIONS */
+  section { padding: 6rem 4rem; }
+
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 0.8rem;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 2.6rem;
+    color: var(--navy);
+    line-height: 1.2;
+    margin-bottom: 1.2rem;
+  }
+
+  .section-subtitle {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    max-width: 540px;
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  /* HOW IT WORKS */
+  .how-bg { background: var(--navy); color: var(--white); }
+  .how-bg .section-label { color: var(--gold); }
+  .how-bg .section-title { color: var(--white); }
+  .how-bg .section-subtitle { color: rgba(255,255,255,0.65); }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    margin-top: 4rem;
+  }
+
+  .step-card {
+    padding: 2rem 1.5rem;
+    background: rgba(255,255,255,0.06);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.12);
+    transition: transform 0.2s;
+  }
+
+  .step-card:hover { transform: translateY(-4px); }
+
+  .step-number {
+    font-family: var(--font-display);
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--teal-light);
+    opacity: 0.3;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .step-title { font-weight: 700; font-size: 1.05rem; color: var(--white); margin-bottom: 0.6rem; }
+  .step-desc { font-size: 0.88rem; color: rgba(255,255,255,0.6); line-height: 1.7; font-weight: 300; }
+
+  /* FEATURES */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-top: 3.5rem;
+  }
+
+  .feature-item {
+    display: flex;
+    gap: 1.2rem;
+    align-items: flex-start;
+    padding: 1.8rem;
+    background: var(--white);
+    border-radius: 20px;
+    border: 1px solid var(--sand);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+
+  .feature-item:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.08); transform: translateY(-2px); }
+
+  .feature-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--teal) 0%, var(--teal-light) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+
+  .feature-title { font-weight: 700; font-size: 1.02rem; color: var(--navy); margin-bottom: 0.4rem; }
+  .feature-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; font-weight: 300; }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  .about-photo {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: linear-gradient(160deg, var(--teal) 0%, var(--navy) 100%);
+    border-radius: 40px 40px 120px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.9);
+    font-family: var(--font-display);
+    font-size: 3rem;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(30, 42, 74, 0.2);
+  }
+
+  .about-tag {
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    background: var(--terracotta);
+    color: var(--white);
+    padding: 1.2rem 1.8rem;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(200, 90, 46, 0.35);
+  }
+
+  .about-tag .num { display: block; font-family: var(--font-display); font-size: 2rem; line-height: 1; }
+  .about-text h2 { margin-bottom: 1.5rem; }
+  .about-text p { color: var(--text-muted); font-size: 1rem; line-height: 1.85; font-weight: 300; margin-bottom: 1.2rem; }
+
+  /* TESTIMONIALS */
+  .testimonials-bg { background: linear-gradient(135deg, var(--teal) 0%, var(--navy) 100%); color: var(--white); }
+  .testimonials-bg .section-label { color: var(--gold); }
+  .testimonials-bg .section-title { color: var(--white); }
+
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.8rem;
+    margin-top: 3.5rem;
+  }
+
+  .review-card {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 20px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+  }
+
+  .stars { color: var(--gold); font-size: 1rem; letter-spacing: 0.1em; margin-bottom: 1rem; }
+  .review-text { font-size: 0.9rem; color: rgba(255,255,255,0.85); line-height: 1.8; font-weight: 300; font-style: italic; margin-bottom: 1.5rem; }
+
+  .reviewer { display: flex; align-items: center; gap: 0.8rem; }
+
+  .reviewer-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--navy);
+    flex-shrink: 0;
+  }
+
+  .reviewer-name { font-weight: 700; font-size: 0.9rem; color: var(--white); }
+  .reviewer-loc { font-size: 0.78rem; color: rgba(255,255,255,0.55); }
+
+  /* PRICING */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 3.5rem;
+  }
+
+  .price-card {
+    background: var(--white);
+    border: 2px solid var(--sand);
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+  }
+
+  .price-card:hover { transform: translateY(-6px); box-shadow: 0 16px 50px rgba(0,0,0,0.1); }
+
+  .price-card.featured { border-color: var(--terracotta); background: var(--navy); color: var(--white); }
+
+  .price-badge {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--terracotta);
+    color: var(--white);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.35rem 1.2rem;
+    border-radius: 50px;
+    white-space: nowrap;
+  }
+
+  .price-tier { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--teal); margin-bottom: 0.6rem; }
+  .price-card.featured .price-tier { color: var(--teal-light); }
+
+  .price-name { font-family: var(--font-display); font-size: 1.6rem; color: var(--navy); margin-bottom: 0.4rem; }
+  .price-card.featured .price-name { color: var(--white); }
+
+  .price-amount { font-family: var(--font-display); font-size: 2.8rem; font-weight: 700; color: var(--terracotta); margin: 1rem 0 0.3rem; line-height: 1; }
+
+  .price-note { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1.8rem; }
+  .price-card.featured .price-note { color: rgba(255,255,255,0.5); }
+
+  .price-features { list-style: none; margin-bottom: 2rem; text-align: left; }
+
+  .price-features li {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--sand);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    line-height: 1.5;
+  }
+
+  .price-card.featured .price-features li { color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.1); }
+  .check { color: var(--teal); font-weight: 700; flex-shrink: 0; }
+  .price-card.featured .check { color: var(--teal-light); }
+
+  .btn-price {
+    display: block;
+    width: 100%;
+    padding: 0.85rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: 2px solid var(--terracotta);
+    background: transparent;
+    color: var(--terracotta);
+    transition: all 0.2s;
+    letter-spacing: 0.04em;
+    font-family: var(--font-body);
+  }
+
+  .btn-price:hover { background: var(--terracotta); color: var(--white); }
+  .price-card.featured .btn-price { background: var(--terracotta); color: var(--white); }
+
+  /* CTA */
+  .cta-section {
+    background: var(--terracotta);
+    text-align: center;
+    padding: 6rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -20%;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+
+  .cta-section::after {
+    content: '';
+    position: absolute;
+    bottom: -40%; right: -10%;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+
+  .cta-section .section-label { color: rgba(255,255,255,0.7); }
+  .cta-section h2 { font-family: var(--font-display); font-size: 3rem; color: var(--white); margin-bottom: 1rem; }
+  .cta-section p { color: rgba(255,255,255,0.8); font-size: 1.1rem; margin-bottom: 2.5rem; font-weight: 300; }
+
+  .btn-white {
+    display: inline-block;
+    background: var(--white);
+    color: var(--terracotta);
+    padding: 1rem 3rem;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 1rem;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    position: relative;
+    z-index: 1;
+  }
+
+  .btn-white:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(0,0,0,0.25); }
+
+  /* FOOTER */
+  footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.6);
+    padding: 3rem 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.85rem;
+  }
+
+  footer .logo { font-family: var(--font-display); font-size: 1.3rem; color: var(--white); }
+  footer .logo span { color: var(--terracotta); font-style: italic; }
+
+  footer nav a {
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    margin-left: 2rem;
+    font-size: 0.82rem;
+    transition: color 0.2s;
+  }
+
+  footer nav a:hover { color: var(--white); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-text > * { animation: fadeUp 0.7s ease forwards; opacity: 0; }
+  .hero-badge { animation-delay: 0.1s; }
+  .hero h1 { animation-delay: 0.25s; }
+  .hero-subtitle { animation-delay: 0.4s; }
+  .hero-buttons { animation-delay: 0.55s; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.2rem; }
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero::before { display: none; }
+    .hero-text { padding: 6rem 2rem 2rem; }
+    .hero h1 { font-size: 2.6rem; }
+    .hero-image { padding: 1rem 2rem 3rem; }
+    .steps-grid { grid-template-columns: repeat(2, 1fr); }
+    .features-grid { grid-template-columns: 1fr; }
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .reviews-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    section { padding: 4rem 2rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+    footer nav { margin-top: 0.5rem; }
+    footer nav a { margin: 0 0.8rem; }
+  #contact { padding: 4rem 2rem !important; }
+  #contact > div { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Travel with <span>Lily</span></div>
+  <ul class="nav-links">
+    <li><a href="#how">Kako radi</a></li>
+    <li><a href="#features">Šta dobijate</a></li>
+    <li><a href="#about">O meni</a></li>
+    <li><a href="#contact" class="nav-cta">Kontakt</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <span class="hero-badge">✦ Personalizovano planiranje putovanja</span>
+    <h1>Tvoje putovanje,<br><em>tvoj ritam,</em><br>moj plan.</h1>
+    <p class="hero-subtitle">
+      Ja sam Ljiljana i ovo je Travel with Lily — mesto gde tvoje putovanje dobija plan koji je skrojen baš za tebe. Bez copy-paste šablona. Samo tvoje želje.
+    </p>
+    <div class="hero-buttons">
+      <a href="#contact" class="btn-primary">Poruči plan →</a>
+      <a href="#how" class="btn-outline">Kako funkcioniše</a>
+    </div>
+  </div>
+  <div class="hero-image">
+    <div class="photo-frame">
+      <div class="photo-placeholder">
+        <div class="initials">Lj</div>
+        <div class="name-tag">Ljiljana</div>
+      </div>
+    </div>
+    <div class="floating-card card-left">
+      <span class="card-icon">🗺️</span>Personalizovane rute
+    </div>
+    <div class="floating-card card-right">
+      <span class="card-icon">🐾</span>Pet-friendly opcije
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-bg" id="how">
+  <div class="section-label">↳ Proces</div>
+  <h2 class="section-title">Kako nastaje tvoj plan?</h2>
+  <p class="section-subtitle">Četiri jednostavna koraka od ideje do savršenog putovanja.</p>
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-number">01</div>
+      <div class="step-title">Pišeš mi</div>
+      <p class="step-desc">Javljaš se u DM ili mejlom — destinacija, datumi, budžet, stil. Sve što imaš na umu.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-number">02</div>
+      <div class="step-title">Istražujem</div>
+      <p class="step-desc">Pronalazim prave rute, restorane, smještaj i aktivnosti — prilagođeno tebi, ne turistima.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-number">03</div>
+      <div class="step-title">Kreiram plan</div>
+      <p class="step-desc">Dobijaš PDF sa svim detaljima — mape, linkovi, saveti, alternativni planovi.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-number">04</div>
+      <div class="step-title">Uživaš</div>
+      <p class="step-desc">Ti samo pakovati kofer. Plan je tu, podrška je dostupna tokom čitavog puta.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-label">↳ Šta dobijate</div>
+  <h2 class="section-title">Sve na jednom mestu</h2>
+  <p class="section-subtitle">Svaki plan je ručno kreiran — sa pažnjom i ljubavlju prema detaljima.</p>
+  <div class="features-grid">
+    <div class="feature-item">
+      <div class="feature-icon">📄</div>
+      <div>
+        <div class="feature-title">Personalizovan PDF plan</div>
+        <p class="feature-desc">Rute, restorani, mape, linkovi, saveti — sve na jednom mestu, pregledno i jasno.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">🎯</div>
+      <div>
+        <div class="feature-title">Prilagođen tvom budžetu</div>
+        <p class="feature-desc">Bio to luksuzni odmor ili ekonomično putovanje — uvek u okviru tvojeg budžeta.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">🐾</div>
+      <div>
+        <div class="feature-title">Pet-friendly opcije</div>
+        <p class="feature-desc">Putuješ sa ljubimcem? Nema problema — pronalazim mjesta koja vas oboje dočekuju.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">⏱️</div>
+      <div>
+        <div class="feature-title">Tvoj tempo, tvoj stil</div>
+        <p class="feature-desc">Volite da uživate polako ili da vidite maksimum? Plan se prilagođava vašem ritmu.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" style="background: var(--white);">
+  <div class="about-grid">
+    <div style="position: relative;">
+      <div class="about-photo">Lj</div>
+      <div class="about-tag">
+        <span class="num">100+</span>
+        Srećnih putnika
+      </div>
+    </div>
+    <div class="about-text">
+      <div class="section-label">↳ O meni</div>
+      <h2 class="section-title">Ja sam Ljiljana</h2>
+      <p>
+        Znate onaj osećaj kad provedete više vremena guglajući nego što zapravo uživate na putu? E, ja to rešavam.
+      </p>
+      <p>
+        Ja istražujem, planiram i kreiram — ti samo pakuješ kofer i uživaš od prvog koraka. Svaki plan nastaje ručno, sa pažnjom prema svakom detalju. Bez copy-paste šablona. Bez generičkih preporuka.
+      </p>
+      <p>
+        Veruju mi putnici koji putuju sa decom, ljubimcima, u paru ili solo — jer svaki plan pišem kao da putujem ja.
+      </p>
+      <a href="#contact" class="btn-primary" style="margin-top: 0.5rem;">Hajde da planiramo →</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-bg">
+  <div class="section-label">↳ Utisci</div>
+  <h2 class="section-title">Šta kažu putnici</h2>
+  <div class="reviews-grid">
+    <div class="review-card">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">"Ljiljana je napravila plan za naš put u Toskanu koji je bio savršen do poslednjeg detalja. Restorani, rute, čak i rezervni plan za kišu — sve je bilo tu."</p>
+      <div class="reviewer">
+        <div class="reviewer-avatar">MP</div>
+        <div>
+          <div class="reviewer-name">Maja P.</div>
+          <div class="reviewer-loc">Beograd → Toskana</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">"Putujem sa psom i uvek mi je to bio stres. Ovog puta Ljiljana je pronašla sve pet-friendly opcije — hotel, restorane, plaže. Preporučujem svima!"</p>
+      <div class="reviewer">
+        <div class="reviewer-avatar">JK</div>
+        <div>
+          <div class="reviewer-name">Jana K.</div>
+          <div class="reviewer-loc">Novi Sad → Dubrovnik</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">"Planirali smo medeni mesec i hteli smo nešto posebno. Ljiljana je shvatila šta tražimo i isporučila više nego što smo se nadali. Čarobno iskustvo."</p>
+      <div class="reviewer">
+        <div class="reviewer-avatar">SM</div>
+        <div>
+          <div class="reviewer-name">Stefan & Mila</div>
+          <div class="reviewer-loc">Beograd → Santorini</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" style="background: var(--navy); padding: 6rem 4rem;">
+  <div style="max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start;">
+
+    <div>
+      <div class="section-label" style="color: var(--gold);">↳ Kontakt</div>
+      <h2 class="section-title" style="color: var(--white);">Hajde da planiramo tvoje putovanje</h2>
+      <p style="color: rgba(255,255,255,0.65); font-size: 1rem; line-height: 1.85; font-weight: 300; margin-bottom: 2rem;">
+        Napiši mi šta sanjaš — destinaciju, datume, da li putuješ sa ljubimcem — i ja ću se pobrinuti za sve ostalo. Odgovaram u roku od 24 sata.
+      </p>
+      <div style="display: flex; flex-direction: column; gap: 1.2rem;">
+        <div style="display: flex; align-items: center; gap: 1rem; color: rgba(255,255,255,0.75); font-size: 0.92rem;">
+          <span style="width: 42px; height: 42px; border-radius: 12px; background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;">📧</span>
+          <span>office@oaa-consulting.com</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 1rem; color: rgba(255,255,255,0.75); font-size: 0.92rem;">
+          <span style="width: 42px; height: 42px; border-radius: 12px; background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;">📸</span>
+          <a href="https://www.instagram.com/travelwithlily.plan" target="_blank" style="color: rgba(255,255,255,0.75); text-decoration: none;">@travelwithlily.plan</a>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div id="form-wrap">
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <div>
+            <label style="display: block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem;">Ime i prezime</label>
+            <input id="cf-name" type="text" placeholder="Npr. Ana Petrović" style="width: 100%; padding: 0.85rem 1.1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.07); color: var(--white); font-family: var(--font-body); font-size: 0.95rem; outline: none; transition: border 0.2s;" onfocus="this.style.borderColor='rgba(74,170,187,0.6)'" onblur="this.style.borderColor='rgba(255,255,255,0.15)'">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem;">E-mail adresa</label>
+            <input id="cf-email" type="email" placeholder="tvoj@email.com" style="width: 100%; padding: 0.85rem 1.1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.07); color: var(--white); font-family: var(--font-body); font-size: 0.95rem; outline: none; transition: border 0.2s;" onfocus="this.style.borderColor='rgba(74,170,187,0.6)'" onblur="this.style.borderColor='rgba(255,255,255,0.15)'">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem;">Destinacija i datumi</label>
+            <input id="cf-dest" type="text" placeholder="Npr. Grčka, jul 2025." style="width: 100%; padding: 0.85rem 1.1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.07); color: var(--white); font-family: var(--font-body); font-size: 0.95rem; outline: none; transition: border 0.2s;" onfocus="this.style.borderColor='rgba(74,170,187,0.6)'" onblur="this.style.borderColor='rgba(255,255,255,0.15)'">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem;">Poruka</label>
+            <textarea id="cf-msg" rows="4" placeholder="Reci mi više o sebi i putovanju koje sanjaš..." style="width: 100%; padding: 0.85rem 1.1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.07); color: var(--white); font-family: var(--font-body); font-size: 0.95rem; outline: none; resize: vertical; transition: border 0.2s;" onfocus="this.style.borderColor='rgba(74,170,187,0.6)'" onblur="this.style.borderColor='rgba(255,255,255,0.15)'"></textarea>
+          </div>
+          <button onclick="sendContactForm()" style="width: 100%; padding: 1rem; border-radius: 50px; border: none; background: var(--terracotta); color: var(--white); font-family: var(--font-body); font-size: 1rem; font-weight: 700; cursor: pointer; letter-spacing: 0.04em; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 20px rgba(200,90,46,0.35);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 30px rgba(200,90,46,0.45)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 20px rgba(200,90,46,0.35)'">
+            Pošalji upit →
+          </button>
+          <p id="form-status" style="display:none; text-align: center; font-size: 0.88rem; color: var(--teal-light); padding: 0.5rem;"></p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">Travel with <span>Lily</span></div>
+  <div style="font-size: 0.78rem;">Putovanje koje je skrojeno samo za tebe.</div>
+  <nav>
+    <a href="#how">Proces</a>
+    <a href="#features">Usluge</a>
+    <a href="#about">O meni</a>
+    <a href="#contact">Kontakt</a>
+  </nav>
+</footer>
+
+<script>
+function sendContactForm() {
+  var name = document.getElementById('cf-name').value.trim();
+  var email = document.getElementById('cf-email').value.trim();
+  var dest = document.getElementById('cf-dest').value.trim();
+  var msg = document.getElementById('cf-msg').value.trim();
+  var status = document.getElementById('form-status');
+
+  if (!name || !email || !msg) {
+    status.style.display = 'block';
+    status.style.color = '#E8825A';
+    status.textContent = 'Molim te popuni ime, e-mail i poruku.';
+    return;
+  }
+
+  var subject = encodeURIComponent('Travel with Lily — Upit za putovanje' + (dest ? ': ' + dest : ''));
+  var body = encodeURIComponent(
+    'Ime: ' + name + '\n' +
+    'E-mail: ' + email + '\n' +
+    (dest ? 'Destinacija: ' + dest + '\n' : '') +
+    '\nPoruka:\n' + msg
+  );
+
+  window.location.href = 'mailto:office@oaa-consulting.com?subject=' + subject + '&body=' + body;
+
+  status.style.display = 'block';
+  status.style.color = '#4AAABB';
+  status.textContent = 'Otvara se tvoj mejl klijent... Vidimo se uskoro!';
+}
+</script>
+</body>
+</html>
